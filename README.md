@@ -3,41 +3,38 @@
 
 # Table of Contents
 
-1. [Introduction](#introduction)  
-2. [Dataset Understanding](#dataset-understanding)  
-3. [Data Loading and Inspection](#data-loading-and-inspection)  
-4. [Data Preprocessing](#data-preprocessing)  
+- [Introduction](#introduction)  
+- [Dataset Understanding](#dataset-understanding)  
+- [Data Loading and Inspection](#data-loading-and-inspection)  
+- [Data Preprocessing](#data-preprocessing)  
    - [Stationarity Check](#stationarity-check)  
    - [Correcting Date Formats](#correcting-date-formats)  
    - [Feature Engineering](#feature-engineering)  
    - [Handling Missing Data](#handling-missing-data)  
    - [Encoding and Scaling](#encoding-and-scaling)  
-5. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)  
+- [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)  
    - [Decomposition](#decomposition)  
    - [Holiday Impact Analysis](#holiday-impact-analysis)  
    - [Correlation Analysis](#correlation-analysis)  
-6. [Data Preparation for Modeling](#data-preparation-for-modeling)  
+- [Data Preparation for Modeling](#data-preparation-for-modeling)  
    - [Train-Test Split](#train-test-split)  
    - [Feature Selection](#feature-selection)  
-7. [Model Selection and Training](#model-selection-and-training)  
+- [Model Selection and Training](#model-selection-and-training)  
    - [Random Forest Regressor](#random-forest-regressor)  
    - [ARIMA Model](#arima-model)  
-8. [Model Evaluation](#model-evaluation)  
+- [Model Evaluation](#model-evaluation)  
    - [Weighted MAE](#weighted-mae)  
    - [RMSE](#rmse)  
    - [MAPE](#mape)  
-9. [Visualizations and Residual Analysis](#visualizations-and-residual-analysis)  
-10. [Insights and Recommendations](#insights-and-recommendations)  
-11. [Error Analysis](#error-analysis)  
-12. [Improved Feature Engineering](#improved-feature-engineering)  
-13. [Advanced Model Refinements](#advanced-model-refinements)  
-14. [Incorporating External Data](#incorporating-external-data)
+- [Visualizations and Residual Analysis](#visualizations-and-residual-analysis)  
+- [Insights and Recommendations](#insights-and-recommendations)  
 
-## 1. Introduction
+
+## Introduction
 
 This project focuses on building a predictive model for Walmart sales forecasting using historical data to predict future sales performance. By leveraging machine learning techniques, including Random Forest and ARIMA models, the project aims to predict sales trends, seasonal fluctuations, and assesses how sales are being affected with temperature and fuel price. The insights gained from this analysis can assist in inventory planning, demand forecasting, and supply chain optimization, ultimately contributing to more efficient operations and improved sales strategies for businesses in retail.
 
-## 2. Dataset Understanding
+## Dataset Understanding
 Find the dataset from its source on Kaggle: 'https://www.kaggle.com/datasets/mikhail1681/walmart-sales'
 
 **Columns**
@@ -49,9 +46,9 @@ Fuel_Price: *Fuel cost in the region*
 CPI: *Consumer price index*
 Unemployment: *Unemployment rate.*
 
-Disclaimer: *The model performs reasonably well but has room for improvement, because the prediction error is significantly relative to the data's context.*
+Disclaimer: *The model performs reasonably well but has room for improvement because the prediction error is significantly relative to the data's context.*
 
-## 3. Data Loading and Inspection
+## Data Loading and Inspection
  Importing necessary Python Libraries
  ```python
 import pandas as pd
@@ -62,17 +59,23 @@ Loding the Dataset
 data = pd.read_csv('/kaggle/input/walmart-sales/Walmart_Sales.csv')  
 data
 ```
+![Data](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/data_preview.png)
+
 Inspecting the data
 ```python
 # Inspect the columns, data types, and initial statistics
 print(data.info())
 print(data.describe())
 ```
+![Inspection](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/data_info.png)
+![Describe](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/data_describe.png)
+
 Key Featues
 ```python
 print(data[['Weekly_Sales', 'Holiday_Flag', 'Temperature', 'Fuel_Price', 'CPI', 'Unemployment']].head())
-
 ```
+![Key Features](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/key_features.png)
+
 ## 4: Data Preprocessing
 ### Stationarity Check
 ```python
@@ -90,8 +93,8 @@ check_stationarity(data['Weekly_Sales'])
 
 # Apply transformations if non-stationary
 data['Weekly_Sales_diff'] = data['Weekly_Sales'].diff().dropna()
-
 ```
+![adf](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/adf.png)
 
 ### Correcting Date Formats
 
@@ -100,6 +103,7 @@ data['Weekly_Sales_diff'] = data['Weekly_Sales'].diff().dropna()
 data['Date'] = pd.to_datetime(data['Date'], dayfirst=True, errors='coerce')
 print(data[data['Date'].isna()])
 ```
+![Correct formats](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/handling_mixed_formarts.png)
 
 ### Feature Engineering
 
@@ -120,6 +124,8 @@ data['Weekly_Sales_Lag1'] = data['Weekly_Sales'].shift(1)
 
 data
 ```
+![Feature Eng](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/feature_eng.png)
+
 ### Handling Missing Data
 
 ```python
@@ -139,7 +145,6 @@ from sklearn.preprocessing import StandardScaler
 # Scale continuous features
 scaler = StandardScaler()
 data[['Temperature', 'Fuel_Price', 'CPI', 'Unemployment']] = scaler.fit_transform(data[['Temperature', 'Fuel_Price', 'CPI', 'Unemployment']])
-
 ```
 
 ## 5: Exploratory Data Analysis (EDA)
@@ -150,8 +155,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from statsmodels.tsa.seasonal import seasonal_decompose
 
-
-# Ensure that 'Weekly_Sales' column exists and is ready for decomposition
 decomposition = seasonal_decompose(data['Weekly_Sales'], model='additive', period=52)
 
 # Set the figure size and plot
@@ -159,6 +162,8 @@ plt.figure(figsize=(14, 8))  # Adjust width and height as needed
 decomposition.plot()
 plt.show()
 ```
+![Decompostion](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/decomposition.png)
+
 ### Holiday Impact Analysis
 
 ```python
@@ -179,6 +184,8 @@ plt.xticks(ticks=[0, 1, 2], labels=[holiday_labels[i] for i in [0, 1, 2]])
 plt.title("Impact of Holidays on Weekly Sales")
 plt.show()
 ```
+![Holiday analysis](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/holidays_on_sales.png)
+
 ### Correlation Analysis
 ```python
 # Correlation analysis
@@ -187,6 +194,8 @@ sns.heatmap(corr, annot=True, cmap='coolwarm')
 plt.title("Correlation Matrix")
 plt.show()
 ```
+![Heatmap](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/correlation.png)
+
 ## 6. Data Preparation for Modeling
 ### Train-Test Split
 
@@ -218,6 +227,7 @@ features = ['Temperature', 'Fuel_Price', 'CPI', 'Unemployment', 'WeekOfYear', 'S
 target = 'Weekly_Sales'
 ```
 ### Feature Selection
+
 Using Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF) plots to identify the ARIMA(p, d, q) parameters.
 ```python
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
@@ -228,6 +238,7 @@ plt.show()
 plot_pacf(data['Weekly_Sales_diff'].dropna(), lags=30)
 plt.show()
 ```
+![Faeture selection](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/autocorrelation.png)
 
 Time Series
 ```python
@@ -240,12 +251,11 @@ plt.legend()
 plt.show()
 ```
 
-
-
 Validate and clean data
 ```python
 print(data['Date'].unique())
 ```
+![Validate](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/validate_data.png)
 
 Infer Format Dynamically
 ```python
@@ -253,12 +263,12 @@ data['Date'] = pd.to_datetime(data['Date'], format='mixed', errors='coerce')
 print(data['Date'].head())
 print(data['Date'].dtype)
 ```
+![infer](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/infer_format.png)
 
 Removing nulls brought about by lagging and rolling action
 
 ```python
 data = data.dropna()
-data
 ```
 
 
@@ -279,6 +289,7 @@ rf_model.fit(train_data[features], train_data[target])
 predictions = rf_model.predict(test_data[features])
 print("MAE:", mean_absolute_error(test_data[target], predictions))
 ```
+![Model Selection and training](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/model_selection_and_train.png)
 
 ### ARIMA Model
 ```python
@@ -289,6 +300,7 @@ arima_model = ARIMA(train_data['Weekly_Sales_diff'].dropna(), order=(1, 1, 1))
 arima_results = arima_model.fit()
 print(arima_results.summary())
 ```
+![ARIMA](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/arima.png)
 
 ## 8. Model Evaluation 
 ### Weighted MAE
@@ -304,6 +316,7 @@ weights = np.where(holiday_weeks, 5, 1)  # Assign higher weights to holiday week
 wmae = weighted_mae(test_data[target], predictions, weights)
 print("WMAE:", wmae)
 ```
+![evaluation](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/wmae.png)
 
 Additional Evaluation Metrics
 
@@ -315,6 +328,7 @@ from sklearn.metrics import mean_squared_error
 rmse = np.sqrt(mean_squared_error(test_data[target], predictions))
 print("RMSE:", rmse)
 ```
+![RMSE](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/RMSE.png)
 
 ### MAPE
 ```python
@@ -322,6 +336,7 @@ print("RMSE:", rmse)
 mape = np.mean(np.abs((test_data[target] - predictions) / test_data[target])) * 100
 print(f'MAPE: {mape:.2f}%')
 ```
+![MAPE](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/MAPE.png)
 
 Visualising the Model
 ```python
@@ -340,6 +355,7 @@ plt.ylabel('Weekly Sales')
 plt.legend(['Actual', 'Predicted'])
 plt.show()
 ```
+![visual model](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/actual_vs_pred.png)
 
 Residuals
 ```python
@@ -356,8 +372,13 @@ plt.axhline(0, color='black', linestyle='--')  # Line at 0 for reference
 plt.show()
 ```
 
+## Visualizations
 
-Insights and Recommendations
+Dashboard Screenshot
+
+![Dash](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/Screenshot%202024-11-18%20191444.png)
+
+## Insights and Recommendations
 
 Error Analysis: *Examine residuals for unexplained patterns.*
 
