@@ -234,11 +234,15 @@ from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
 plot_acf(data['Weekly_Sales_diff'].dropna(), lags=30)
 plt.show()
-
+```
+![Autocorrelation](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/autocorrelation.png)
+```python
 plot_pacf(data['Weekly_Sales_diff'].dropna(), lags=30)
 plt.show()
 ```
-![Faeture selection](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/autocorrelation.png)
+
+![Faeture selection](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/partial_autocorelation.png)
+
 
 Time Series
 ```python
@@ -250,6 +254,7 @@ plt.title('Stationary Time Series')
 plt.legend()
 plt.show()
 ```
+![Time series](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/stationary_time_series.png)
 
 Validate and clean data
 ```python
