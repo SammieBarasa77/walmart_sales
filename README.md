@@ -383,6 +383,9 @@ Dashboard Screenshot
 
 ![Dash](https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/images/Screenshot%202024-11-18%20191444.png)
 
+
+Download the dashboard file here: https://github.com/SammieBarasa77/walmart_sales/blob/main/assets/docs/Walmart_Stores_Sales_Report.pbix
+
 ## Insights and Recommendations
 
 Error Analysis: *Examine residuals for unexplained patterns.*
@@ -393,5 +396,5 @@ Model Refinements: *Use ensemble models or advanced hyperparameter tuning.*
 
 External Data: *Incorporate weather, competitor data, and economic trends.*
 
-Promotional Data: *If available, add promotional campaigns or pricing data as features.*
+Promotional Data: * This analysis would have even been more than this but for some reason I did not promotional campaigns or pricing data for that part of the analysis.*
 
