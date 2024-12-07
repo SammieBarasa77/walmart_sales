@@ -396,5 +396,5 @@ Model Refinements: *Use ensemble models or advanced hyperparameter tuning.*
 
 External Data: *Incorporate weather, competitor data, and economic trends.*
 
-Promotional Data: * This analysis would have even been more than this but for some reason I did not promotional campaigns or pricing data for that part of the analysis.*
+Promotional Data: *This analysis would have even been more than this but for some reason I did not promotional campaigns or pricing data for that part of the analysis.*
 
